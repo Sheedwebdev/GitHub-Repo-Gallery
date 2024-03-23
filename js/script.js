@@ -7,6 +7,9 @@ const repoList = document.querySelector(".repo-list"); //step14: Create a variab
 const repos = document.querySelector(".repos"); //step28: Create a variable to target the section with the repos class
 const repoData = document.querySelector(".repo-data"); //step29: Create a variable to target the section with the repo-data class
 
+const backToGallery = document.querySelector(".view-repos"); //step53: 
+const filterInput = document.querySelector(".filter-repos");  //step54:
+
 // Part2: Create an asynchronous function for retrieving, parsing, and making use of the user info
 const gitUserInfo = async function () { //step3: Create an asynchronous function expression
     const userInfo = await fetch(`https://api.github.com/users/${username}`); //step4: Create a variable to fetch user data from the GitHub API
@@ -51,6 +54,9 @@ const gitRepoInfo = async function () { //step15: Create an asynchronous functio
 
 // Part5: Create a function for displaying the retrieved repo info
 const displayedRepoInfo = function (repos) {  //step20: Create a function expression using repos as a parameter
+  
+  filterInput.classList.remove("hide"); //step60:
+
   for (const repo of repos) { //step21: Loop through each repo in the array of repos
     const repoItem = document.createElement("li"); //step22: Create a list item for each repo
     repoItem.classList.add("repo"); //step23:  Apply the repo class to each list item 
@@ -90,6 +96,7 @@ const specificRepoInfo = async function (repoName) { //step34
 
 // Part8: Create a function to display specific repo info
 const displayedSpecRepoInfo = function (specInfo, languages) { //step45:
+  backToGallery.classList.remove("hide"); //step59:
   repoData.innerHTML = ""; //step46:
   repoData.classList.remove("hide"); //step47:
   repos.classList.add("hide"); //step48:
@@ -101,6 +108,31 @@ const displayedSpecRepoInfo = function (specInfo, languages) { //step45:
   <a class="visit" href="${specInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>`; //step50:
   repoData.append(div); //step51:
 };
+
+// Part9: Adding a click event to the back button
+backToGallery.addEventListener("click", function () { //step55:
+  repos.classList.remove("hide"); //step56:
+  repoData.classList.add("hide"); //step57:
+  backToGallery.classList.add("hide"); //step58:
+});
+
+
+// Part10: Create a dynamic search feature by adding an input event to the search box
+filterInput.addEventListener("input", function (e) { //step61:
+  const searchText = e.target.value; //step62:
+  console.log(searchText);  //step63:
+  const allRepos = document.querySelectorAll(".repo"); //step64:
+  const searchLowerText = searchText.toLowerCase(); //step65:
+  
+for (const repo of allRepos) { //step66:
+  const repoLowerText = repo.innerText.toLowerCase(); //step67:
+  if (repoLowerText.includes(searchLowerText)) { //step68:
+    repo.classList.remove("hide"); //step69:
+  } else { //step70:
+    repo.classList.add("hide");
+  }
+}
+});    
 
 
 
