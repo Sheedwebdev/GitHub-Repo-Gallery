@@ -4,12 +4,14 @@ const username = "sheedwebdev"; //step2: Create a variable for your GitHub usern
 
 const repoList = document.querySelector(".repo-list"); //step14: Create a variable to target the unordered list with the repo-list class
 
+const repos = document.querySelector(".repos"); //step28: Create a variable to target the section with the repos class
+const repoData = document.querySelector(".repo-data"); //step29: Create a variable to target the section with the repo-data class
 
 // Part2: Create an asynchronous function for retrieving, parsing, and making use of the user info
 const gitUserInfo = async function () { //step3: Create an asynchronous function expression
     const userInfo = await fetch(`https://api.github.com/users/${username}`); //step4: Create a variable to fetch user data from the GitHub API
     const data = await userInfo.json(); //step5: Interpret the json data into js data
-    console.log(data); //step6: Check to see what the parsed data looks like
+    // console.log(data); //step6: Check to see what the parsed data looks like
 
     displayedUserInfo(data); //step13: Call the displayedUserInfo() function from the
 };
@@ -39,7 +41,7 @@ const displayedUserInfo = function (data) { //step8: Create a function expressio
 const gitRepoInfo = async function () { //step15: Create an asynchronous function expression
   const fetchRepoInfo = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`); //step16: Create a variable to fetch repo data from the GitHub API
   const repoInfo = await fetchRepoInfo.json(); //step17: Interpret the json data into js data 
-  console.log(repoInfo); //step18: Check to see what the parsed data looks like 
+  // console.log(repoInfo); //step18: Check to see what the parsed data looks like 
 
   displayedRepoInfo(repoInfo); //step26: Call the displayedRepoInfo() function from Part5 using the parsed repo data as an argument
 };
@@ -57,6 +59,48 @@ const displayedRepoInfo = function (repos) {  //step20: Create a function expres
   }
 };
 
+// Part6: Add a Click Event
+repoList.addEventListener("click", function (e) { //step30:
+  if (e.target.matches("h3")) { //step31:
+    const repoName = e.target.innerText; //step32:
+    // console.log(repoName); //step33:
+
+    specificRepoInfo(repoName); //step45:
+  }
+});
+
+// Part7: Create a function to retrieve specific repo info
+const specificRepoInfo = async function (repoName) { //step34
+  const retrievedInfo =  await fetch(`https://api.github.com/repos/${username}/${repoName}`); //step35:
+  const specInfo = await retrievedInfo.json(); //step36:
+  console.log(specInfo); //step37:
+// Part7a: Create an array of languages
+  const fetchLanguages = await fetch(specInfo.languages_url); //step38:
+  const languageData = await fetchLanguages.json(); //step39:
+  // console.log(languageData); //step40:
+  const languages = []; //step41:
+  for (const language in languageData) { //step42:
+    languages.push(language); //step43:
+  }
+  console.log(languages); //step44:
+
+  displayedSpecRepoInfo(specInfo, languages); //step52:
+};
+
+
+// Part8: Create a function to display specific repo info
+const displayedSpecRepoInfo = function (specInfo, languages) { //step45:
+  repoData.innerHTML = ""; //step46:
+  repoData.classList.remove("hide"); //step47:
+  repos.classList.add("hide"); //step48:
+  const div = document.createElement("div"); //step49:
+  div.innerHTML = `<h3>Name: ${specInfo.name}</h3> 
+  <p>Description: ${specInfo.description}</p>
+  <p>Default Branch: ${specInfo.default_branch}</p>
+  <p>Languages: ${languages.join(", ")}</p>
+  <a class="visit" href="${specInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>`; //step50:
+  repoData.append(div); //step51:
+};
 
 
 
