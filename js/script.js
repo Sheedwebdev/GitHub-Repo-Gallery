@@ -7,8 +7,8 @@ const repoList = document.querySelector(".repo-list"); //step14: Create a variab
 const repos = document.querySelector(".repos"); //step28: Create a variable to target the section with the repos class
 const repoData = document.querySelector(".repo-data"); //step29: Create a variable to target the section with the repo-data class
 
-const backToGallery = document.querySelector(".view-repos"); //step53: 
-const filterInput = document.querySelector(".filter-repos");  //step54:
+const backToGallery = document.querySelector(".view-repos"); //step53: Create a variable to target the back to repo gallery button
+const filterInput = document.querySelector(".filter-repos");  //step54: Create a variable to target the element used for dynamic searches
 
 // Part2: Create an asynchronous function for retrieving, parsing, and making use of the user info
 const gitUserInfo = async function () { //step3: Create an asynchronous function expression
@@ -55,7 +55,7 @@ const gitRepoInfo = async function () { //step15: Create an asynchronous functio
 // Part5: Create a function for displaying the retrieved repo info
 const displayedRepoInfo = function (repos) {  //step20: Create a function expression using repos as a parameter
   
-  filterInput.classList.remove("hide"); //step60:
+  filterInput.classList.remove("hide"); //step60: Make the dynamic search input feature appear
 
   for (const repo of repos) { //step21: Loop through each repo in the array of repos
     const repoItem = document.createElement("li"); //step22: Create a list item for each repo
@@ -66,69 +66,70 @@ const displayedRepoInfo = function (repos) {  //step20: Create a function expres
 };
 
 // Part6: Add a Click Event
-repoList.addEventListener("click", function (e) { //step30:
-  if (e.target.matches("h3")) { //step31:
-    const repoName = e.target.innerText; //step32:
-    // console.log(repoName); //step33:
+repoList.addEventListener("click", function (e) { //step30: Add a click event to the unordered list of repos
+  if (e.target.matches("h3")) { //step31: Write a conditonal statement as to what happens if the user clicks a repo name
+    const repoName = e.target.innerText; //step32: Create a variable to target the innerText of the element being targeted
+    // console.log(repoName); //step33: Check to see if the even listener is working as expected
 
-    specificRepoInfo(repoName); //step45:
+    specificRepoInfo(repoName); //step45: Call the specificRepoInfo() function from Part7
   }
 });
 
 // Part7: Create a function to retrieve specific repo info
-const specificRepoInfo = async function (repoName) { //step34
-  const retrievedInfo =  await fetch(`https://api.github.com/repos/${username}/${repoName}`); //step35:
-  const specInfo = await retrievedInfo.json(); //step36:
-  console.log(specInfo); //step37:
+const specificRepoInfo = async function (repoName) { //step34: Write a asynchronous function for retrieving, parsing, and making use of specific repo info
+  const retrievedInfo =  await fetch(`https://api.github.com/repos/${username}/${repoName}`); //step35: Retrieve the repo from the github api
+  const specInfo = await retrievedInfo.json(); //step36: Parse or interpret the json data into js data
+  // console.log(specInfo); //step37: Check to see what the pased data looks like
 // Part7a: Create an array of languages
-  const fetchLanguages = await fetch(specInfo.languages_url); //step38:
-  const languageData = await fetchLanguages.json(); //step39:
-  // console.log(languageData); //step40:
-  const languages = []; //step41:
-  for (const language in languageData) { //step42:
-    languages.push(language); //step43:
+  const fetchLanguages = await fetch(specInfo.languages_url); //step38: Retreive the languages data for the retrieved repo
+  const languageData = await fetchLanguages.json(); //step39: Parse or interpret the json data into js data
+  console.log(languageData); //step40: Check to see what the parsed data looks like
+  const languages = []; //step41: Create a variable for an empty array to push repo languages to
+  for (const language in languageData) { //step42: Write a for loop for looping through every key in the object languageData
+    languages.push(language); //step43: Push every language in the languageData object to the empty array for languages
   }
-  console.log(languages); //step44:
+  console.log(languages); //step44: Check to see if everything works as expected
 
-  displayedSpecRepoInfo(specInfo, languages); //step52:
+  displayedSpecRepoInfo(specInfo, languages); //step52: Display the specific repo info 
 };
 
 
 // Part8: Create a function to display specific repo info
-const displayedSpecRepoInfo = function (specInfo, languages) { //step45:
-  backToGallery.classList.remove("hide"); //step59:
-  repoData.innerHTML = ""; //step46:
-  repoData.classList.remove("hide"); //step47:
-  repos.classList.add("hide"); //step48:
-  const div = document.createElement("div"); //step49:
+const displayedSpecRepoInfo = function (specInfo, languages) { //step45: Create a function expression for displaying the specific repo info
+  backToGallery.classList.remove("hide"); //step59: Make the backToGallery button appear
+  repoData.innerHTML = ""; //step46: Clear all the previous html from the repoData section 
+  repoData.classList.remove("hide"); //step47: Make the repoData appear
+  repos.classList.add("hide"); //step48: Make all the listed repos disappear
+  const div = document.createElement("div"); //step49: Create a div element
+  //step50: Display the name, description, default branch, languages, and repo url
   div.innerHTML = `<h3>Name: ${specInfo.name}</h3> 
   <p>Description: ${specInfo.description}</p>
   <p>Default Branch: ${specInfo.default_branch}</p>
   <p>Languages: ${languages.join(", ")}</p>
-  <a class="visit" href="${specInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>`; //step50:
-  repoData.append(div); //step51:
+  <a class="visit" href="${specInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>`;
+  repoData.append(div); //step51: Add the created div to the repoData section
 };
 
 // Part9: Adding a click event to the back button
-backToGallery.addEventListener("click", function () { //step55:
-  repos.classList.remove("hide"); //step56:
-  repoData.classList.add("hide"); //step57:
-  backToGallery.classList.add("hide"); //step58:
+backToGallery.addEventListener("click", function () { //step55: Create an event listener for the back to gallery button
+  repos.classList.remove("hide"); //step56: Make the list of repos appear again
+  repoData.classList.add("hide"); //step57: Make the repo data currently being displayed disappear
+  backToGallery.classList.add("hide"); //step58: Make the back to gallery button disappear
 });
 
 
 // Part10: Create a dynamic search feature by adding an input event to the search box
-filterInput.addEventListener("input", function (e) { //step61:
-  const searchText = e.target.value; //step62:
-  console.log(searchText);  //step63:
-  const allRepos = document.querySelectorAll(".repo"); //step64:
-  const searchLowerText = searchText.toLowerCase(); //step65:
+filterInput.addEventListener("input", function (e) { //step61: Add an event listener to the input element used for a dynamic search
+  const searchText = e.target.value; //step62: Create a variable to capture the value of the search text
+  // console.log(searchText);  //step63: Check to see if the search text is being captured
+  const allRepos = document.querySelectorAll(".repo"); //step64: Create a variable for selecting the entire section that houses all the repos and search input box
+  const searchLowerText = searchText.toLowerCase(); //step65: Create a variable that changes all input values to lower case
   
-for (const repo of allRepos) { //step66:
-  const repoLowerText = repo.innerText.toLowerCase(); //step67:
-  if (repoLowerText.includes(searchLowerText)) { //step68:
-    repo.classList.remove("hide"); //step69:
-  } else { //step70:
+for (const repo of allRepos) { //step66: Loop through all repos in the list of repos
+  const repoLowerText = repo.innerText.toLowerCase(); //step67: Create a variable that changes all repos to lower case
+  if (repoLowerText.includes(searchLowerText)) { //step68: Write a conditional statement that states whether the search text includes the repo text
+    repo.classList.remove("hide"); //step69: Make that specific repo appear
+  } else { //step70: Make sure all other repos are hidden
     repo.classList.add("hide");
   }
 }
