@@ -12,8 +12,8 @@ const filterInput = document.querySelector(".filter-repos");  //step54: Create a
 
 // Part2: Create an asynchronous function for retrieving, parsing, and making use of the user info
 const gitUserInfo = async function () { //step3: Create an asynchronous function expression
-    const userInfo = await fetch(`https://api.github.com/users/${username}`); //step4: Create a variable to fetch user data from the GitHub API
-    const data = await userInfo.json(); //step5: Interpret the json data into js data
+    const userData = await fetch(`https://api.github.com/users/${username}`); //step4: Create a variable to fetch user data from the GitHub API
+    const data = await userData.json(); //step5: Interpret the json data into js data
     // console.log(data); //step6: Check to see what the parsed data looks like
 
     displayedUserInfo(data); //step13: Call the displayedUserInfo() function from the
